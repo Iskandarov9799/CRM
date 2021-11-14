@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../node_modules"
+		},
+		{
+			"path": "../src"
+		},
+		{
+			"path": "../src/middlewares"
+		},
+		{
+			"path": "../src/modules"
+		},
+		{
+			"path": "../src/routes"
+		}
+	]
+}
