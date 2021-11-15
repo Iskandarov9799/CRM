@@ -9,8 +9,8 @@ const path = require("path");
 
 async function server(mode) {
 	try {
-		app.listen(process.env.PORT || 80, () =>
-			console.log(`SERVER READY ${process.env.PORT || 80}`)
+		app.listen(process.env.PORT || 8000, () =>
+			console.log(`SERVER READY ${process.env.PORT || 8000}`)
 		);
 
 		const db = await postgres();
