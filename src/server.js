@@ -1,34 +1,37 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
-const routes = require("./routes/index");
-const postgres = require("./modules/postgres");
+const routes = require("./routes");
+const postgres = require("./modules/pg/postgres");
 const databaseMiddleware = require("./middlewares/databaseMiddleware");
+const customErrorMiddleware = require("./middlewares/customErrorMiddleware");
+const path = require("path");
 
 async function server(mode) {
-    try {
+	try {
+		app.listen(process.env.PORT || 80, () =>
+			console.log(`SERVER READY ${process.env.PORT || 80}`)
+		);
 
-        app.listen(process.env.PORT || 8000, () => 
-        console.log(`Server is ready ${process.env.PORT || 8000}`));
+		const db = await postgres();
 
-        const db = await postgres();
+		await databaseMiddleware(db, app);
 
-        await databaseMiddleware(db, app);
+		app.use(customErrorMiddleware);
 
-        app.use(express.json());
-        app.use(express.urlencoded({ extended: true}));
+		app.use(express.json());
+		app.use(express.urlencoded({ extended: true }));
 
-        if(mode == "dev"){
-            app.use(morgan("dev"));
-        };
+		app.use(express.static(path.join(__dirname, "public")));
 
-
-    } catch (error) {
-        console.log("Server Error", error);
-    } finally {
-        routes(app);
-    }
+		if (mode == "dev") {
+			app.use(morgan("dev"));
+		}
+	} catch (error) {
+		console.log("SERVER ERROR", error);
+	} finally {
+		routes(app);
+	}
 }
-
 
 module.exports = server;
